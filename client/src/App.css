@@ -1,0 +1,88 @@
+.App {
+   text-align: center;
+}
+
+.App-logo {
+   height: 40vmin;
+   pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+   .App-logo {
+      animation: App-logo-spin infinite 20s linear;
+   }
+}
+
+.App-header {
+   background-color: #282c34;
+   min-height: 100vh;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   font-size: calc(10px + 2vmin);
+   color: white;
+}
+
+.App-link {
+   color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+   from {
+      transform: rotate(0deg);
+   }
+   to {
+      transform: rotate(360deg);
+   }
+}
+
+.Background-yellow {
+   background-color: #ffc700;
+}
+
+.Background-blue {
+   background-color: blue;
+}
+
+.Background-button-login {
+   background-color: #433434;
+}
+
+.btn-primary {
+   background-color: #433434;
+   color: white;
+}
+
+.banner-height {
+   height: 550px;
+}
+
+.bg-light-2 {
+   background-color: #e5e5e5;
+}
+
+.bg-white {
+   background-color: white;
+}
+
+.bg-red {
+   background-color: red;
+}
+
+.border-view {
+   border: black 1px solid;
+}
+
+.card-style {
+   height: 134px;
+   width: 224px;
+}
+
+.text-small {
+   size: 18px;
+}
+
+.text-bold {
+   font-weight: bold;
+}
