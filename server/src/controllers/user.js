@@ -24,21 +24,46 @@ exports.getUser = async (req, res) => {
     }
 };
 
+exports.getUserRestaurant = async (req, res) => {
+    console.log("hitting get user restaurant");
+    const { limitreq } = req.query;
+    try {
+        var users;
+        if (limitreq) {
+            users = await User.findAll({ limit: limitreq, where: { role: "Partner" } });
+        }
+        users = await User.findAll({ where: { role: "Partner" } });
+
+
+        res.send({
+            status: "success",
+            data: {
+                users: users
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            status: "error",
+            message: "server error"
+        });
+    }
+};
 
 exports.registerUser = async (req, res) => {
     try {
         const { body } = req;
-        const { email, password } = body;
+        const { emailregister, passwordregister } = body;
 
-        console.log(req.body);
+        console.log("serveruser", req.body);
 
         const schema = Joi.object({
             fullname: Joi.string().min(10).max(100).required(),
-            email: Joi.string().email().min(8).max(50).required(),
+            emailregister: Joi.string().email().min(8).max(50).required(),
             phone: Joi.string().min(10).max(50).required(),
-            location: Joi.string().min(8).required(),
+            // location: Joi.string().min(8).required(),
             role: Joi.string().required(),
-            password: Joi.string().min(8).required(),
+            passwordregister: Joi.string().min(8).required(),
 
         });
 
@@ -52,7 +77,7 @@ exports.registerUser = async (req, res) => {
 
         const checkEmail = await User.findOne({
             where: {
-                email,
+                email: emailregister,
             },
         });
 
@@ -63,16 +88,16 @@ exports.registerUser = async (req, res) => {
             });
 
         const hashStrength = 10;
-        const hashedPassword = await bcrypt.hash(password, hashStrength);
+        const hashedPassword = await bcrypt.hash(passwordregister, hashStrength);
 
         console.log(req.file);
 
         const user = await User.create({
             fullname: req.body.fullname,
-            email: req.body.email,
+            email: req.body.emailregister,
             phone: req.body.phone,
-            location: req.body.location,
-            image: req.files.imageFile[0].filename,
+            location: "null",
+            image: "null",
             role: req.body.role,
             password: hashedPassword,
         });
@@ -112,6 +137,8 @@ exports.registerUser = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
+
+        console.log("hitting login");
 
         const schema = Joi.object({
             email: Joi.string().email().min(8).max(50).required(),
@@ -205,77 +232,77 @@ exports.deleteUser = async (req, res) => {
     }
 };
 
-exports.login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
+// exports.login = async (req, res) => {
+//     try {
+//         const { email, password } = req.body;
 
-        const schema = Joi.object({
-            email: Joi.string().email().min(10).max(50).required(),
-            password: Joi.string().min(8).required(),
-        });
+//         const schema = Joi.object({
+//             email: Joi.string().email().min(10).max(50).required(),
+//             password: Joi.string().min(8).required(),
+//         });
 
-        const { error } = schema.validate(req.body);
+//         const { error } = schema.validate(req.body);
 
-        if (error)
-            return res.status(400).send({
-                status: "validation failed",
-                message: error.details[0].message,
-            });
+//         if (error)
+//             return res.status(400).send({
+//                 status: "validation failed",
+//                 message: error.details[0].message,
+//             });
 
-        const checkEmail = await User.findOne({
-            where: {
-                email,
-            },
-        });
+//         const checkEmail = await User.findOne({
+//             where: {
+//                 email,
+//             },
+//         });
 
-        if (!checkEmail)
-            return res.status(400).send({
-                status: "Login Failed",
-                message: "Your Credentials is not Valid",
-            });
+//         if (!checkEmail)
+//             return res.status(400).send({
+//                 status: "Login Failed",
+//                 message: "Your Credentials is not Valid",
+//             });
 
-        const isValidPass = await bcrypt.compare(password, checkEmail.password);
+//         const isValidPass = await bcrypt.compare(password, checkEmail.password);
 
-        if (!isValidPass) {
-            return res.status(400).send({
-                status: "Login Failed",
-                message: "Your Credentials is not Valid",
-            });
-        }
+//         if (!isValidPass) {
+//             return res.status(400).send({
+//                 status: "Login Failed",
+//                 message: "Your Credentials is not Valid",
+//             });
+//         }
 
-        const secretKey = "asdf1234";
-        const token = jwt.sign(
-            {
-                id: checkEmail.id,
-            },
-            secretKey
-        );
+//         const secretKey = "asdf1234";
+//         const token = jwt.sign(
+//             {
+//                 id: checkEmail.id,
+//             },
+//             secretKey
+//         );
 
-        res.send({
-            status: "success",
-            message: "Login Success",
-            data: {
-                user: {
-                    name: checkEmail.name,
-                    email: checkEmail.email,
-                    token,
-                },
-            },
-        });
-    } catch (err) {
-        console.log(err);
-        res.status(500).send({
-            status: "error",
-            message: "Server Error",
-        });
-    }
-};
+//         res.send({
+//             status: "success",
+//             message: "Login Success",
+//             data: {
+//                 user: {
+//                     name: checkEmail.name,
+//                     email: checkEmail.email,
+//                     token,
+//                 },
+//             },
+//         });
+//     } catch (err) {
+//         console.log(err);
+//         res.status(500).send({
+//             status: "error",
+//             message: "Server Error",
+//         });
+//     }
+// };
 
 
 exports.getUserById = async (req, res) => {
 
     try {
-        const id = req.userId.id;
+        const { id } = req.params;
         const getUser = await User.findByPk(id);
 
         if (getUser) {
@@ -293,6 +320,32 @@ exports.getUserById = async (req, res) => {
         res.status(500).send({
             status: "error",
             message: "server error"
+        });
+    }
+};
+
+exports.checkAuth = async (req, res) => {
+    console.log("hitting checkAuth");
+
+    try {
+        const user = await User.findOne({
+            where: {
+                id: req.userId.id,
+            },
+        });
+
+        res.send({
+            status: "success",
+            message: "User Valid",
+            data: {
+                user,
+            },
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({
+            status: "error",
+            message: "Server Error",
         });
     }
 };

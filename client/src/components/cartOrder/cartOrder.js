@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 
-import { CartContext } from "../../contexts/cartContext";
-
+import CartContext from "../../contexts/cart/cartContext";
 import { Row, Col, Button, Form, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -12,39 +11,19 @@ import MapRender from './mapRender';
 
 const CartOrder = () => {
 
-    const [state, dispatch] = useContext(CartContext);
+    const cartContext = useContext(CartContext);
+
+    const { addProductToCart, cart, increaseQty, decreaseQty, removeProductFromCart } = cartContext;
+
+    // const [state, dispatch] = useContext(CartContext);
 
     const [show3, setShow3] = useState(false);
 
     const handleClose = () => setShow3(false);
     const handleShow = () => setShow3(true);
 
-    const removeProductFromCart = (id) => {
-        dispatch({
-            type: "REMOVE_CART",
-            payload: {
-                id,
-            }
-        });
-    };
 
-    const increaseQty = (id) => {
-        dispatch({
-            type: "INCREASE_QTY",
-            payload: {
-                id
-            }
-        });
-    };
-
-    const decreaseQty = (id) => {
-        dispatch({
-            type: "DECREASE_QTY",
-            payload: {
-                id
-            }
-        });
-    };
+    // };
 
     return (
         <div className="bg-light-2 container">
@@ -73,7 +52,7 @@ const CartOrder = () => {
                 <Col>
                     {/* -------------- card here -------------------- */}
                     <div>
-                        {state.cart.map((cartItem) => (
+                        {cart.map((cartItem) => (
                             <Row key={cartItem.id}>
                                 <Col className="col-sm-6" style={{ borderBottom: "solid 1px black" }} >
                                     <img src={KFC} style={{ display: "inline" }} />

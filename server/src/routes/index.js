@@ -3,22 +3,24 @@ const router = express.Router();
 const { authenticated } = require("../middlewares/auth");
 const { checkRolePartner, checkRoleUser } = require("../middlewares/checkRole");
 
-const { getUser, registerUser, deleteUser, login, getUserById } = require('../controllers/user');
+const { getUser, registerUser, deleteUser, login, getUserById, checkAuth, getUserRestaurant } = require('../controllers/user');
 const { getProducts, getProductsByPartner, getDetailProduct, addProduct, updateProduct, deleteProduct } = require('../controllers/product');
 const { getTranscation, addTranscation, updateStatusTransaction, deleteTransaction } = require('../controllers/transaction');
 const { uploadFile } = require('../middlewares/upload');
 
 // user api
 router.get("/users", getUser);
-router.get("/user-by-id", authenticated, getUserById);
+router.get("/check-auth", authenticated, checkAuth);
+router.get("/user-by-id/:id", getUserById);
+router.get("/user-partner/:limitreq?", getUserRestaurant);
 router.post("/user-login", login);
-router.post("/user", uploadFile("imageFile"), registerUser);
+router.post("/user", registerUser);
 router.delete("/user/:id", authenticated, deleteUser);
 
 
 // products api
 router.get("/products", getProducts);
-router.get("/products-by-partner/:id", authenticated, getProductsByPartner);
+router.get("/products-by-partner/:id", getProductsByPartner);
 router.get("/product-detail/:id", getDetailProduct);
 router.post("/add-product", authenticated, checkRolePartner, uploadFile("imageFile"), addProduct);
 router.patch("/update-product/:id", authenticated, checkRolePartner, updateProduct);

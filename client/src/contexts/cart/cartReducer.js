@@ -1,13 +1,4 @@
-import React, { createContext, useReducer } from "react";
-
-export const CartContext = createContext();
-
-const initialState = {
-    isLogin: false,
-    cart: []
-};
-
-const reducer = (state, action) => {
+export default (state, action) => {
 
     const { type, payload } = action;
 
@@ -58,14 +49,3 @@ const reducer = (state, action) => {
             throw new Error;
     }
 };
-
-export const CartContextProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(reducer, initialState);
-
-
-
-    return (
-        <CartContext.Provider value={[state, dispatch]}>{children}</CartContext.Provider>
-    );
-};
-

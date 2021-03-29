@@ -79,11 +79,17 @@ exports.addProduct = async (req, res) => {
         console.log("response body", body);
         const idUser = req.userId.id;
 
+        // if (!req.files.image)
+        //     return res.status(400).send({
+        //         status: "fail",
+        //         message: "image not found",
+        //     });
+
         const product = await Product.create(
             {
                 title: req.body.title,
                 price: req.body.price,
-                image: req.files.imageFile[0].filename,
+                image: req.files.image[0].filename,
                 userId: idUser
             }
         );
@@ -92,7 +98,7 @@ exports.addProduct = async (req, res) => {
             {
                 where: { id: product.id },
                 include: { model: User, attributes: { exclude: ["image", "role", "password", "createdAt", "updatedAt"] } },
-                attributes: { exclude: ["userId", "UserId", "createdAt", "updatedAt"] }
+                attributes: { exclude: ["id", "UserId", "createdAt", "updatedAt"] }
             }
         );
 

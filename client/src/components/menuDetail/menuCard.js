@@ -10,7 +10,7 @@ import MieAyamGeprekKeju from './images/MieAyamGeprekKeju.svg';
 import MieAyamLeleh from './images/MieAyamLeleh.svg';
 import MieAyamSambelTelurAsin from './images/MieAyamSambelTelurAsin.svg';
 
-import { CartContext } from '../../contexts/cartContext';
+import CartContext from '../../contexts/cart/cartContext';
 
 const MenuCard = ({ menu, addProductToCart }) => {
 
